@@ -1,1 +1,44 @@
+What is a class in object-oriented programming?
+A class is a blueprint or template for creating objects, defining their properties (attributes) and behaviors (methods).
 
+What is an object, and how does it relate to a class?
+A class is a blueprint or template for creating objects, which are instances of that class, representing real-world entities or concepts with specific data and behaviors. 
+
+Define a constructor. What is its role in a class?
+A constructor is a special method used to initialize an object's attributes when a new instance of a class is created, ensuring the object starts in a valid state.
+
+Define a destructor. Why is it important in managing an object’s lifecycle?
+A destructor is a special method automatically invoked when an object's lifecycle ends, primarily used to release resources (like memory, files, or network connections) that the object acquired during its lifetime, preventing resource leaks. 
+
+Briefly describe the lifecycle of an object from instantiation to destruction.
+Creation and initialization, use, and destruction. Object lifecycle routines allow the creation and destruction of object references; lifecycle methods associated with an object allow you to control what happens when an object is created or destroyed.
+
+Why is it important for a class to manage its resources (e.g., memory) during its lifecycle?
+A class needs to manage its resources (like memory) during its lifecycle to prevent memory leaks, ensure efficient resource usage, and maintain system stability, ultimately leading to a more robust and performant application. 
+
+class Goblin {
+private:
+    string name;
+    int health;
+
+public:
+    Goblin(string goblinName, int goblinHealth) : name(goblineName), health(goblinHealth){
+          cout << "Goblin " << name << " has been created with " << health << " health." << endl;}
+
+    ~Goblin(){
+          cout << "Goblin " << name << " has been destroyed" << endl;}
+
+    void display() const{
+          cout << "Goblin " << name << " has "" << health << " health remaining." << endl;}
+};
+
+This Goblin class uses a constructor to initialize its private members (name and health) when an object is created. The destructor automatically executes when an object goes out of scope, printing a message indicating the object's destruction. The display method allows the object's state to be viewed. The object's lifecycle is managed by C++'s automatic memory management, ensuring proper initialization and cleanup.
+
+How do constructors help ensure that an object starts its lifecycle in a valid state?
+Constructors help ensure that an object starts its lifecycle in a valid state by automatically initializing its data members when an object is created. This prevents uninitialized variables, which can lead to undefined behavior. By defining a constructor with parameters, developers can enforce proper initialization by requiring necessary values at the time of object creation. Additionally, constructors can include validation logic to check input values and prevent invalid states, ensuring the object behaves as expected from the moment it is instantiated.
+
+Explain why destructors are necessary, especially in languages without automatic garbage collection.
+Destructors are necessary, especially in languages without automatic garbage collection such as C++, because they ensure that resources allocated during an object's lifetime are properly released when the object is destroyed. This includes deallocating dynamically allocated memory, closing file handles, releasing network connections, and freeing other system resources. Without destructors, resource leaks can occur, leading to memory bloat and reduced performance over time.
+
+What could happen if a class does not properly manage its resources during its lifecycle?
+If a class does not properly manage its resources, it can lead to memory leaks, resource leaks, and undefined behavior. Unreleased memory or system resources can degrade performance and cause crashes, while dangling pointers can lead to unpredictable errors. Proper use of constructors, destructors, and smart pointers ensures efficient resource management and program stability.
