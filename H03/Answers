@@ -83,6 +83,8 @@ int main() {
     return 0;
 }
 
+Part C:
+
 When to Use Inheritance
 When It's Beneficial:
 Scenario: You’re building a game where many characters share basic features like health, movement, and attack behavior.
