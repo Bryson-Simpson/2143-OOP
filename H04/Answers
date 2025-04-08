@@ -1,1 +1,114 @@
+Part A:
+
+Polymorphism is the ability of different objects to respond to the same method call in a way that is specific to their own class.
+
+Why is it a pillar of OOP?
+Polymorphism allows for flexibility and reusability in code, enabling objects to be treated generically while still behaving in class-specific ways—making systems easier to extend and maintain.
+
+Compile-Time vs. Runtime
+
+Compile-time polymorphism (method overloading):
+Occurs when multiple methods have the same name but differ in parameter types or number, and the method to execute is determined at compile time.
+
+Runtime polymorphism (method overriding):
+Happens when a subclass provides a specific implementation of a method already defined in its superclass, and the decision of which method to call is made at runtime.
+
+Which type requires inheritance, and why?
+Runtime polymorphism requires inheritance because it relies on method overriding, where a subclass redefines a method from its superclass.
+
+Method Overloading
+
+Why overload methods?
+To provide flexible options for performing the same action with different input types or argument combinations, improving usability.
+
+Brief example:
+A print() method in a class might be overloaded to accept a string, an integer, or a list—so users can call print() without worrying about converting data types beforehand.
+
+Method Overriding
+How does a derived class override a base method?
+By defining a method with the same signature as a method in the base class, the derived class replaces or extends the original behavior.
+
+Why use virtual or annotations?
+They signal to the compiler and other developers that a method is meant to be overridden, ensuring correct behavior in polymorphic scenarios and preventing accidental hiding of methods.
+
+Part B:
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+class Shape {
+public:
+    virtual void draw() const = 0; // Abstract method
+};
+
+class Circle : public Shape {
+public:
+    void draw() const override {
+        cout << "Drawing a Circle\n";}
+};
+
+class Rectangle : public Shape {
+public:
+    void draw() const override {
+        cout << "Drawing a Rectangle\n";}
+};
+
+int main() {
+    vector<Shape*> shapes;
+    shapes.push_back(new Circle());
+    shapes.push_back(new Rectangle());
+
+    for (Shape* s : shapes)
+        s->draw(); // Runtime polymorphism: correct draw() called
+
+    for (Shape* s : shapes)
+        delete s;}
+
+Part C:
+
+Compile-time resolution means the compiler determines which version of calculate() to call based on the argument types used in the function call.
+
+For example, calculate(5, 3) calls the int version, while calculate(5.0, 3.0) calls the double version.
+
+This is possible because overloading is resolved statically, during compilation—no need to wait for runtime.
+
+This decision is made at runtime.
+
+Why? Because s is a pointer to Shape, and the actual object (Circle) isn't known until the program is running.
+
+The virtual function mechanism ensures that the correct draw() is called based on the actual object type, not the pointer type.
+
+Part D:
+
+In a game, you have a base class GameObject with a virtual method update().
+
+Derived classes like Player, Enemy, and PowerUp each override update() with their own behavior (e.g., movement, AI logic, animation updates).
+
+Why is polymorphism essential here?
+You can store all game objects in a single list
+
+Benefits:
+
+No need to check types manually.
+
+You avoid duplicating update logic handling per type.
+
+Easy to extend.
+
+Potential Pitfalls
+Method Overloading Pitfall:
+It can be confusing when overloaded methods behave similarly but have subtly different side effects or performance (e.g., calculate(int, int) vs. calculate(float, float)), especially when implicit type conversions are involved.
+
+Runtime Polymorphism Pitfall:
+Performance can be slightly impacted due to virtual table lookups, and debugging becomes harder because the actual method being called isn’t always obvious just by looking at the code—you often need to trace through at runtime.
+
+Checking Understanding
+New Triangle class added to Shape:
+Polymorphism allows the existing code that uses Shape* or Shape& (like the drawing loop) to work without changes.
+
+You simply create a Triangle class that overrides draw(), and the system automatically calls the correct method—even if the rest of your code doesn't know Triangle exists.
+
+This is the Open/Closed Principle in action:
+Your code is open to extension (add new shapes), but closed to modification (no need to rewrite existing logic).
 
