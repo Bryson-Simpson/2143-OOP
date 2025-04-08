@@ -1,1 +1,89 @@
+Definition:
+Encapsulation is the concept of bundling data (variables) and the methods that operate on that data into a single unit, usually a class, while restricting direct access to some of the object's components. This helps ensure that the internal representation of the object is hidden from the outside and can only be changed in controlled ways.
 
+Example:
+Imagine a `BankAccount` class with a balance. By making the balance private and only allowing deposits and withdrawals through methods, you prevent external code from accidentally setting the balance to a negative value, which could break the system’s logic.
+
+Visibility Modifiers
+
+Public Easy access from anywhere; promotes flexibility. Can expose internal details, making the code fragile and harder to maintain.
+Private Ensures strict control over data; prevents unwanted access. Can reduce flexibility, especially if you later need access in related classes.
+Protected Allows subclass access while keeping others out; good for inheritance. Still exposes internals more than private, which can lead to tight coupling between parent and child classes.
+
+When to use protected instead of private:  
+When designing a base class intended to be extended (e.g., a Vehicle class), and you want subclasses like Car or Bike to access or modify certain data (like engine state), but don’t want general code outside the hierarchy to touch it.
+
+Impact on Maintenance
+
+Encapsulation simplifies debugging and maintenance because it limits the places where data can be changed. When a bug involves a variable, you know it can only be modified within specific methods, reducing the scope you need to inspect.
+
+Scenario  
+Suppose an application has a User class with a public age field. Somewhere else in the code, a developer accidentally sets age = -5. The user interface starts acting strangely, but tracking down the issue becomes difficult because the age could be changed from anywhere in the system.
+
+Real-World Analogy
+
+Think of a vending machine.  
+-Public interface: Buttons to select a drink, a slot to insert coins, and an opening to take your product.  
+-Private implementation: The internal mechanisms—motors, inventory tracking, coin validation logic.
+
+Why hide the private side? 
+If users could directly interact with the machine’s internals, it could cause jams, cheating, or malfunction. Keeping the inner workings hidden ensures consistent, safe usage through the designed interface.
+
+class BankAccount {
+/**
+ * BankAccount class represents a simple bank account.
+ * 
+ * Note:
+ *  - Do NOT attempt to access or modify balance directly.
+ *    Use deposit() and withdraw() to ensure valid operations.
+ *  - accountNumber is read-only after initialization for security reasons.
+ */
+private:
+    double balance;
+    int accountNumber;
+
+public:
+    BankAccount(int accNum, double initialBalance);
+    /**
+     * Deposits a positive amount to the account.
+     * @param amount Amount to be deposited. Must be > 0.
+     */
+    void deposit(double amount);
+    /**
+     * Attempts to withdraw a positive amount.
+     * @param amount Amount to be withdrawn.
+     * @return true if successful, false if insufficient funds or invalid input.
+     */
+    bool withdraw(double amount);
+};
+
+Benefits of Hiding Internal Data Behind Methods:
+Controlled Access & Validation: Methods allow you to check input values before modifying internal state, preventing invalid or unsafe changes.
+
+Easier Maintenance: If the internal structure changes later, you can keep the public interface the same, minimizing the impact on other parts of the codebase.
+
+One Potential Limitation:
+Performance or Complexity Overhead: Accessing data through methods can introduce a slight performance cost and make simple operations (like reading a value) more verbose or less straightforward, especially for small, simple classes.
+
+Encapsulation vs. Other Concepts
+How is Encapsulation Different from Abstraction?
+Encapsulation is about how data is protected within a class—it's a technique for hiding internal state and enforcing access through controlled interfaces (e.g., getters/setters).
+
+Abstraction is about what details are shown or hidden from the user—it's a way of focusing on essential features while ignoring the underlying complexity (e.g., exposing "drive()" without explaining how the engine works).
+
+Why Both Are Considered Information Hiding:
+Both concepts aim to shield users from unnecessary details:
+
+Encapsulation hides internal data and how it’s managed.
+
+Abstraction hides unnecessary implementation details, allowing users to interact with simplified interfaces.
+
+They reduce cognitive load, prevent misuse, and allow systems to evolve more safely.
+
+Testing Encapsulated Classes
+How to Unit Test Without Exposing Private Data:
+Test via Public Interface: Interact with the class the way a real user would—by calling public methods and checking expected outcomes.
+
+Use Assertions Based on Behavior: For example, after calling deposit(50), call a public method like getBalance() (if allowed), or validate via a return value or side effect.
+
+Refactor for Testability (if needed): If necessary, use design patterns like the "friend" keyword in C++, test-specific accessors, or dependency injection to increase visibility only for testing—without exposing data in production.
