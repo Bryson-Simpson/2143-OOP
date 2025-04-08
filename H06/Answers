@@ -1,1 +1,141 @@
+Part A: Conceptual Questions
 
+Composition vs. Aggregation
+Composition represents a "strong" relationship between objects where one object owns another and is responsible for its lifecycle. If the parent object is destroyed, the child object is also destroyed.
+
+Example of Composition:
+
+A Car class has an Engine object. If the Car is destroyed, the Engine is also destroyed.
+
+class Engine {
+public:
+    void start() { /* start engine */ }
+};
+
+class Car {
+private:
+    Engine engine;  // Car "owns" Engine
+public:
+    void drive() { engine.start(); }
+};
+
+Aggregation is a "weaker" relationship where an object uses another object, but the child object’s lifecycle is independent of the parent. If the parent is destroyed, the child object may continue to exist.
+
+Example of Aggregation:
+A Person class might have a reference to an Address class. If the Person is destroyed, the Address could still exist as a standalone object.
+
+class Address {
+public:
+    string street;
+    string city;
+};
+
+class Person {
+private:
+    Address* address;  // Person references Address (aggregation)
+public:
+    void setAddress(Address* addr) { address = addr; }
+};
+
+Which implies stronger ownership?
+Composition implies a stronger form of ownership because the lifecycle of the contained object is controlled by the container object.
+
+When to Use
+Scenario for Composition (e.g., Game Development):
+In a game, a Player object might have an Inventory. The Inventory should only exist as long as the Player exists, so it makes sense to use composition. If the player is destroyed, the inventory is destroyed along with it.
+
+Scenario for Aggregation (e.g., Banking):
+In a banking system, a Customer might have a BankAccount. If the customer is deleted, the account can still exist independently. The BankAccount object’s lifecycle is independent of the Customer, so aggregation is sufficient.
+
+Why aggregation is looser coupling:
+Aggregation allows objects to remain independent, meaning they can be shared among multiple objects. In the banking example, a BankAccount could be shared by multiple Customers, and its existence is not tied to a single Customer.
+
+Differences from Inheritance
+Composition/Aggregation vs. Inheritance ("is-a" relationship):
+
+Inheritance represents an "is-a" relationship, where one class is a specialized version of another. For example, a Dog is a type of Animal.
+
+Composition and Aggregation represent "has-a" relationships, where one object contains or uses another object. For example, a Car has an Engine (composition), and a Person has an Address (aggregation).
+
+Why prefer composition over inheritance?
+Composition is often favored over inheritance because it leads to more flexible designs and avoids the tight coupling that inheritance can cause. Inheritance can lead to a rigid class hierarchy that may become hard to maintain, whereas composition allows for more dynamic and loosely coupled designs.
+
+Real-World Analogy
+System Example (Car):
+
+A Car has an Engine (composition) because the engine cannot exist independently of the car—it is created and destroyed with the car.
+
+A Car has a Driver (aggregation) because the driver is independent of the car. The driver can exist without the car and can drive multiple cars over time.
+
+Why these distinctions matter in code:
+
+Composition ensures that resources are managed correctly and tightly bound to the object’s lifecycle.
+
+Aggregation offers flexibility in cases where shared ownership is necessary and objects can exist independently.
+
+Part B: Minimal Class Design or UML
+
+#include <iostream>
+using namespace std;
+
+class Address {
+public:
+    string street;
+    string city;
+    Address(string str, string c) : street(str), city(c) {}
+};
+
+class Person {
+private:
+    string name;
+    Address* address;  // Aggregation: Person does not own Address directly
+public:
+    Person(string n) : name(n), address(nullptr) {}
+    void setAddress(Address* addr) { address = addr; }
+    void printDetails() {
+        cout << "Name: " << name << "\n";
+        if (address)
+            cout << "Address: " << address->street << ", " << address->city << "\n";
+        else
+            cout << "No address set.\n";
+    }
+};
+
+int main() {
+    Address addr("123 Main St", "Springfield");
+    Person p("John Doe");
+    p.setAddress(&addr);  // Aggregating Address
+    p.printDetails();
+    return 0;
+}
+
+Explanation:
+Address is aggregated into Person, meaning the Person references an Address but doesn’t own it. The Address can exist independently.
+
+The Person class has a method setAddress() to link to an Address object.
+
+Part C: Reflection & Short Discussion
+
+Ownership & Lifecycle
+In a composition relationship, what happens if the parent is destroyed?
+If the parent object is destroyed, the child objects (contained via composition) are also destroyed. For example, if a Car is destroyed, its Engine will also be destroyed automatically.
+
+In an aggregation relationship, how might the child object continue to exist independently?
+In aggregation, if the parent object is destroyed, the child object can still exist independently. For example, if a Person is deleted, their Address may still exist or be reused by another person.
+
+Advantages & Pitfalls
+Advantage of Composition for controlling lifecycles:
+Composition automatically manages the lifecycle of objects, ensuring that dependent objects are properly created and destroyed along with their container object.
+
+Pitfall of using composition where aggregation is needed:
+Using composition where aggregation is appropriate can result in overly tight coupling, making the code harder to maintain or extend. For example, if a Customer is composed with a BankAccount, destroying the Customer would also delete their account, which might not be desired.
+
+Contrast with Inheritance
+"Has-a" vs. "Is-a" relationships:
+
+"Has-a" implies ownership, as in a Car has an Engine.
+
+"Is-a" implies a subtype relationship, as in a Dog is an Animal.
+
+Why avoid inheritance for composition/aggregation scenarios:
+Inheritance introduces rigid class hierarchies, while composition and aggregation allow for more flexible, reusable designs. In cases where a class just needs to use or contain another object (like a Car using an Engine), composition or aggregation is a more appropriate and less tightly coupled solution.
