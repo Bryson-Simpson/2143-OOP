@@ -1,1 +1,124 @@
+Part A: Conceptual Questions
 
+Abstraction is the concept of hiding the complex implementation details of a system and exposing only the essential features to the user, allowing them to interact with the system at a higher level.
+
+Real-world Analogy:
+Think of a TV remote: you can change channels, adjust volume, or power the TV on/off, but you don’t need to know how the circuits inside the TV work or how signals are processed. The remote provides a simple interface for complex actions.
+
+Abstraction vs. Encapsulation
+
+Abstraction focuses on hiding the implementation details and exposing only necessary functionality. For example, when you use a calculator, you only care about adding numbers, not how the calculator computes the sum internally.
+
+Encapsulation is the concept of bundling data and methods that operate on the data into a single unit (class), and restricting access to some of the object's internal details through access modifiers (e.g., private, protected).
+
+Why Confuse the Two?
+Both deal with hiding information from the user, but abstraction focuses on what an object does (interface), while encapsulation focuses on how an object stores and manages its data (implementation).
+
+Designing with Abstraction
+Smart Thermostat Example:
+
+Attributes:
+currentTemperature
+desiredTemperature
+mode (e.g., heating, cooling, off)
+
+Methods:
+setTemperature(double temp)
+getCurrentTemperature()
+
+Why omit internal details:
+You would not expose low-level details like circuit design, temperature sensor readings, or firmware logic. These details are irrelevant to the user and would clutter the interface. The user only needs to interact with the thermostat at a high level (e.g., setting a desired temperature).
+
+Benefits of Abstraction
+Benefits in Large-Scale Software:
+Simplifies complex systems: By hiding unnecessary details, abstraction allows developers to focus on the core functionality.
+Improves maintainability: Changes to the implementation can be made without affecting the overall system, as long as the interface remains the same.
+
+How it reduces code complexity:
+Abstraction reduces complexity by hiding unnecessary implementation details, allowing users and developers to interact with a simplified interface.
+
+Part B: Minimal Class Example (Pseudo-code)
+
+#include <iostream>
+using namespace std;
+
+// Abstract class
+class BankAccount {
+public:
+    virtual void deposit(double amount) = 0;  // Abstract method
+    virtual void withdraw(double amount) = 0;  // Abstract method
+    virtual double getBalance() const = 0;    // Abstract method
+};
+
+// Derived class: SavingsAccount
+class SavingsAccount : public BankAccount {
+private:
+    double balance;
+public:
+    SavingsAccount(double initialBalance) : balance(initialBalance) {}
+
+    void deposit(double amount) override {
+        balance += amount;  // Simple deposit logic
+    }
+
+    void withdraw(double amount) override {
+        if (balance >= amount) {
+            balance -= amount;  // Simple withdrawal logic
+        } else {
+            cout << "Insufficient funds\n";
+        }
+    }
+
+    double getBalance() const override {
+        return balance;
+    }
+};
+
+int main() {
+    SavingsAccount myAccount(1000);
+    myAccount.deposit(500);
+    myAccount.withdraw(200);
+    cout << "Balance: " << myAccount.getBalance() << endl;
+    return 0;
+}
+
+The BankAccount class is abstract, defining the core operations (deposit, withdraw, getBalance).
+
+SavingsAccount provides concrete implementations of these methods but hides the internal logic (e.g., encryption, logging, or ledger balancing).
+
+The user interacts only with the public methods (deposit, withdraw, getBalance), while internal complexities are abstracted.
+
+Part C: Reflection & Comparison
+
+Distilling the Essentials
+Which data/methods would you hide in SavingsAccount?
+
+You would hide internal methods or data such as:
+Transaction logs
+Interest rate calculations
+Ledger updates
+
+These internal details are irrelevant to the user’s core operations and would only complicate the interface.
+
+Contrast with Polymorphism
+If BankAccount is abstract, calling methods like deposit() on a SavingsAccount object highlights polymorphism. The method call is resolved at runtime, and the correct deposit() method is executed based on the actual object type (SavingsAccount).
+
+Abstraction hides the complexity of each account type’s internal workings, while polymorphism ensures the right method is called based on the object type.
+
+Real-World Example:
+In Healthcare, abstraction is crucial for simplifying the API design. For instance, a Patient class may have methods like admit(), discharge(), and checkVitals(), but the underlying medical records management, billing system, and medication administration are hidden.
+
+Optional Exploration
+Interfaces vs. Abstract Classes
+Interface: An interface defines a contract that the implementing classes must follow, containing only method signatures (no implementation).
+
+Abstract Class: An abstract class can contain both abstract methods (without implementation) and concrete methods (with implementation).
+
+Scenario for Interface:
+If you want to enforce that multiple unrelated classes (like Car, Airplane, Boat) all have a startEngine() method, an interface would be more suitable since these classes don’t share a common base class.
+
+Testing Abstractions
+To test an abstract class or method:
+Create a mock derived class that implements the abstract methods.
+Unit test the derived class, ensuring that the abstract methods behave as expected.
+Use test doubles or mocks to isolate the behavior of the abstract class in the absence of full implementations.
