@@ -1,1 +1,131 @@
+Part A:
+Inheritance is an object-oriented programming concept where one class (the derived or child class) inherits properties and behaviors (fields and methods) from another class (the base or parent class). This promotes code reuse and establishes a hierarchical relationship between classes.
 
+Difference from Composition or Aggregation:
+Inheritance: Defines an “is-a” relationship. A Car is a type of Vehicle.
+
+Composition: Defines a “has-a” relationship. A Car has an Engine.
+
+Aggregation: A looser form of composition; objects can exist independently. A Library aggregates Books (the books can exist without the library).
+
+Types of Inheritance
+1. Single Inheritance
+One class inherits from one parent.
+
+Example: A Dog class that inherits from an Animal class.
+
+Use Case: When you want a specific class to gain the general behaviors of a more generic one.
+
+2. Multiple Inheritance
+One class inherits from two or more base classes.
+
+Example: A SmartPhone class inheriting from both Camera and Phone.
+
+Use Case: When a class needs to combine capabilities from multiple sources.
+
+Overriding Methods
+Method overriding allows a derived class to provide its own version of a method already defined in the base class. This enables behavior customization while keeping the base structure.
+
+Why Override Instead of Adding a New Method?
+Overriding keeps the interface consistent and allows polymorphism—meaning a BaseClass* pointer can call a derived method dynamically. Adding a new method might break that uniformity or require extra casting or checks.
+
+Example:
+A base Shape class has a draw() method. A Circle and Square class override draw() to render themselves appropriately.
+
+Real-World Analogy
+Scenario:
+A university student inherits characteristics from a person—like name, date of birth, and address—but also has specific features like student ID, GPA, and enrolled courses.
+
+OOP Alignment:
+The student “is a” person (inheritance).
+
+The student class can reuse the general person attributes (name, age) and extend or modify behavior (like overriding a displayInfo() method to include GPA).
+
+Helps avoid rewriting shared logic and supports specialization.
+
+Part B:
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+// Base class
+class Vehicle {
+public:
+    string brand;
+
+    Vehicle(string b) : brand(b) {}
+
+    virtual void drive() {
+        cout << brand << " Vehicle is driving." << endl;
+    }
+};
+
+// Derived class
+class Car : public Vehicle {
+public:
+    int doors;
+
+    Car(string b, int d) : Vehicle(b), doors(d) {}
+
+    void drive() override {
+        cout << brand << " Car with " << doors << " doors is driving." << endl;
+    }
+};
+
+int main() {
+    Vehicle v("GenericBrand");
+    Car c("Toyota", 4);
+
+    v.drive();  // Output: GenericBrand Vehicle is driving.
+    c.drive();  // Output: Toyota Car with 4 doors is driving.
+
+    return 0;
+}
+
+When to Use Inheritance
+When It's Beneficial:
+Scenario: You’re building a game where many characters share basic features like health, movement, and attack behavior.
+
+You create a base Character class, and then extend it into Player, Enemy, and NPC subclasses with specialized behavior.
+
+This avoids code duplication and makes the system easier to extend.
+
+When It Might Be Overkill or Fragile:
+Scenario: You create a base Employee class, then a Manager subclass, and a RemoteManager subclass of that. Later you realize some developers are also managers, and the hierarchy breaks down.
+
+Why it’s fragile: Too much reliance on inheritance can make code rigid and hard to refactor when real-world roles don't fit neatly into one hierarchy.
+
+In this case, composition (e.g., a Role component) might work better.
+
+Method Overriding vs. Overloading
+Feature	Overriding	Overloading
+What	Redefines a base class method in a derived class	Same method name, but different parameters in the same class
+When Happens	Runtime (polymorphism)	Compile-time (method resolution)
+Purpose	Customize inherited behavior	Provide different ways to call the same method
+Key Rule	Must have the same method signature	Must have different parameter lists
+Why inheritance relies on overriding:
+Because it allows dynamic behavior—you can treat objects of derived types as the base type and still get the correct behavior. This makes inheritance flexible, especially in polymorphic code where you don’t know the exact type at compile time.
+
+Inheritance vs. Interfaces / Abstract Classes
+Inheritance (Concrete Base Classes):
+Passes down both data and behavior.
+
+You inherit implementation details along with structure.
+
+Interface or Abstract Base Class:
+Specifies a contract without defining how it's done.
+
+Forces derived classes to implement certain methods (e.g., draw() in a Drawable interface).
+
+Promotes decoupling and flexibility—common in languages like Java, C#, and C++.
+
+ Problem: The Diamond Problem
+Occurs when a class inherits from two classes that both inherit from the same base class.
+
+The compiler can’t tell which inherited version of the base class to use (ambiguous).
+
+Solution:
+C++ Strategy: Use virtual inheritance to tell the compiler that there should only be one shared instance of the base class.
+
+General Approach: Favor interface-based design (as in Java/C#) where multiple inheritance of behavior is replaced by implementing multiple interfaces—no ambiguity because interfaces don’t carry implementation.
